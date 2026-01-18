@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="page-header">
+            <h2>{{ title }}</h2>
+        </div>
+
+        <div class="form-section">
+            <form method="post">
+                {% csrf_token %}
+
+                <div class="row g-3">
+                    <div class="col-md-4">
+                        <label for="id_code" class="form-label">Kode <span class="text-danger">*</span></label>
+                        {{ form.code }}
+                    </div>
+                    <div class="col-md-8">
+                        <label for="id_name" class="form-label">Nama Kriteria <span class="text-danger">*</span></label>
+                        {{ form.name }}
+                    </div>
+                    <div class="col-12">
+                        <label for="id_description" class="form-label">Deskripsi</label>
+                        {{ form.description }}
+                    </div>
+                    <div class="col-md-6">
+                        <label for="id_weight" class="form-label">Bobot <span class="text-danger">*</span></label>
+                        {{ form.weight }}
+                        <div class="form-text">Nilai antara 0.00 - 1.00</div>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="id_attribute_type" class="form-label">Tipe Atribut</label>
+                        {{ form.attribute_type }}
+                    </div>
+                    <div class="col-12">
+                        <div class="form-check">
+                            {{ form.is_active }}
+                            <label class="form-check-label" for="id_is_active">Aktif</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="d-flex gap-2 mt-4">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="bi bi-check-lg"></i> Simpan
+                    </button>
+                    <a href="{% url 'inventory:criteria_list' %}" class="btn btn-outline-secondary">
+                        <i class="bi bi-x-lg"></i> Batal
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

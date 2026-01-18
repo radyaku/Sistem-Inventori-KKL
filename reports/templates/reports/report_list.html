@@ -1,0 +1,132 @@
+{% extends 'base.html' %}
+
+{% block title %}Laporan Aset{% endblock %}
+
+{% block content %}
+<div class="page-header no-print">
+    <h2>Laporan Rekapitulasi Kondisi Aset</h2>
+    <p>Preview dan export laporan</p>
+</div>
+
+<!-- Action Buttons -->
+<div class="mb-4 no-print">
+    <button onclick="window.print()" class="btn btn-danger">
+        <i class="bi bi-printer"></i> Print
+    </button>
+    <a href="{% url 'reports:generate_pdf' %}" class="btn btn-primary">
+        <i class="bi bi-download"></i> Download PDF
+    </a>
+    <a href="{% url 'reports:export_excel' %}" class="btn btn-success">
+        <i class="bi bi-file-earmark-excel"></i> Export Excel
+    </a>
+</div>
+
+<!-- Report Preview -->
+<div class="form-section">
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <h4 class="text-primary"><i class="bi bi-broadcast-pin"></i> PROTELINDO</h4>
+            <small class="text-muted">A Subsidiary of PT Sarana Menara Nusantara Tbk</small>
+            <p class="mt-2 small">
+                PT Profesional Telekomunikasi Indonesia<br>
+                Menara BCA, Jl. MH Thamrin No.1 Lantai 50<br>
+                Jakarta Pusat, DKI Jakarta 10310
+            </p>
+        </div>
+        <div class="col-md-6 text-end">
+            <p class="small text-muted mb-1">Tanggal: {% now "d F Y" %}</p>
+            <p class="small text-muted">No. Dokumen: RPT/AST/{% now "Y" %}/001</p>
+        </div>
+    </div>
+
+    <h5 class="text-center mb-4">LAPORAN REKAPITULASI KONDISI ASET</h5>
+
+    <!-- Summary Cards -->
+    <div class="row g-3 mb-4">
+        <div class="col-md-3">
+            <div class="border rounded p-3 text-center">
+                <div class="small text-muted">Total Aset</div>
+                <div class="fs-3 fw-bold">{{ total_assets }}</div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="border rounded p-3 text-center">
+                <div class="small text-muted">Grade A</div>
+                <div class="fs-3 fw-bold text-success">{{ grade_a }}</div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="border rounded p-3 text-center">
+                <div class="small text-muted">Grade B</div>
+                <div class="fs-3 fw-bold text-info">{{ grade_b }}</div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="border rounded p-3 text-center">
+                <div class="small text-muted">Grade C & D</div>
+                <div class="fs-3 fw-bold text-warning">{{ grade_cd }}</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Data Table -->
+    <table class="table table-bordered">
+        <thead class="table-dark">
+            <tr>
+                <th>No</th>
+                <th>Kode Aset</th>
+                <th>Model Aset</th>
+                <th>User Terakhir</th>
+                <th>Status</th>
+                <th>Kondisi</th>
+                <th>Grade Akhir</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for laptop in laptops %}
+            <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ laptop.asset_code }}</td>
+                <td>{{ laptop.brand }} {{ laptop.model }}</td>
+                <td>{{ laptop.last_user }}</td>
+                <td>{{ laptop.get_status_display }}</td>
+                <td>
+                    {% if laptop.assessment %}
+                    {{ laptop.assessment.condition_notes|default:"-" }}
+                    {% else %}
+                    -
+                    {% endif %}
+                </td>
+                <td class="text-center">
+                    {% if laptop.assessment and laptop.assessment.final_grade %}
+                    <span class="badge-grade badge-grade-{{ laptop.assessment.final_grade|lower }}">
+                        Grade {{ laptop.assessment.final_grade }}
+                    </span>
+                    {% else %}
+                    -
+                    {% endif %}
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="7" class="text-center text-muted">Tidak ada data</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- Signatures -->
+    <div class="row mt-5 pt-5">
+        <div class="col-6 text-center">
+            <p>Admin Gudang</p>
+            <br><br><br>
+            <p class="border-top d-inline-block px-4">Nama & Tanggal</p>
+        </div>
+        <div class="col-6 text-center">
+            <p>Kepala Aset IT</p>
+            <br><br><br>
+            <p class="border-top d-inline-block px-4">Nama & Tanggal</p>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,175 @@
+{% extends 'base.html' %}
+
+{% block title %}Detail Aset {{ laptop.asset_code }}{% endblock %}
+
+{% block content %}
+<div class="page-header d-flex justify-content-between align-items-start">
+    <div>
+        <h2>{{ laptop.asset_code }} - {{ laptop.brand }} {{ laptop.model }}</h2>
+        <p>Detail informasi aset</p>
+    </div>
+    <div class="d-flex gap-2">
+        <a href="{% url 'inventory:laptop_edit' laptop.pk %}" class="btn btn-outline-primary">
+            <i class="bi bi-pencil"></i> Edit
+        </a>
+        <a href="{% url 'inventory:laptop_change_status' laptop.pk %}" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-repeat"></i> Ubah Status
+        </a>
+        <a href="{% url 'inventory:laptop_delete' laptop.pk %}" class="btn btn-outline-danger">
+            <i class="bi bi-trash"></i> Hapus
+        </a>
+    </div>
+</div>
+
+<div class="row g-4">
+    <!-- Asset Info -->
+    <div class="col-md-6">
+        <div class="form-section h-100">
+            <h5><i class="bi bi-info-circle"></i> Informasi Aset</h5>
+            <table class="table table-borderless">
+                <tr>
+                    <td class="text-muted" style="width: 40%;">Kode Aset</td>
+                    <td class="fw-semibold">{{ laptop.asset_code }}</td>
+                </tr>
+                <tr>
+                    <td class="text-muted">Nomor Serial</td>
+                    <td>{{ laptop.serial_number }}</td>
+                </tr>
+                <tr>
+                    <td class="text-muted">Merk</td>
+                    <td>{{ laptop.brand }}</td>
+                </tr>
+                <tr>
+                    <td class="text-muted">Model</td>
+                    <td>{{ laptop.model }}</td>
+                </tr>
+                <tr>
+                    <td class="text-muted">User Terakhir</td>
+                    <td>{{ laptop.last_user }}</td>
+                </tr>
+                <tr>
+                    <td class="text-muted">Status</td>
+                    <td>
+                        {% if laptop.status == 'ready' %}
+                        <span class="badge-status badge-ready">Tersedia</span>
+                        {% elif laptop.status == 'auction' %}
+                        <span class="badge-status badge-auction">Proses Lelang</span>
+                        {% elif laptop.status == 'sold' %}
+                        <span class="badge-status badge-sold">Terjual</span>
+                        {% elif laptop.status == 'used' %}
+                        <span class="badge-status badge-used">Dipakai</span>
+                        {% else %}
+                        <span class="badge-status badge-draft">{{ laptop.get_status_display }}</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                <tr>
+                    <td class="text-muted">Tanggal Dibuat</td>
+                    <td>{{ laptop.created_at|date:"d M Y H:i" }}</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <!-- Specs -->
+    <div class="col-md-6">
+        <div class="form-section h-100">
+            <h5><i class="bi bi-cpu"></i> Spesifikasi Teknis</h5>
+            <table class="table table-borderless">
+                <tr>
+                    <td class="text-muted" style="width: 40%;">Prosesor</td>
+                    <td>{{ laptop.processor }}</td>
+                </tr>
+                <tr>
+                    <td class="text-muted">RAM</td>
+                    <td>{{ laptop.ram_gb }} GB</td>
+                </tr>
+                <tr>
+                    <td class="text-muted">Storage</td>
+                    <td>{{ laptop.storage_size_gb }} GB {{ laptop.storage_type }}</td>
+                </tr>
+                <tr>
+                    <td class="text-muted">GPU</td>
+                    <td>{{ laptop.gpu|default:"-" }}</td>
+                </tr>
+                <tr>
+                    <td class="text-muted">Grade Fisik</td>
+                    <td>
+                        {% if laptop.physical_grade %}
+                        <span class="badge-grade badge-grade-{{ laptop.physical_grade|lower }}">Grade {{
+                            laptop.physical_grade }}</span>
+                        {% else %}
+                        <span class="text-muted">Belum dinilai</span>
+                        {% endif %}
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <!-- Financial Info -->
+    <div class="col-md-6">
+        <div class="form-section h-100">
+            <h5><i class="bi bi-cash"></i> Informasi Finansial</h5>
+            <table class="table table-borderless">
+                <tr>
+                    <td class="text-muted" style="width: 40%;">Harga Pembukaan</td>
+                    <td>{% if laptop.open_price %}Rp {{ laptop.open_price|floatformat:0 }}{% else %}-{% endif %}</td>
+                </tr>
+                <tr>
+                    <td class="text-muted">Harga Jual</td>
+                    <td>{% if laptop.sold_price %}Rp {{ laptop.sold_price|floatformat:0 }}{% else %}-{% endif %}</td>
+                </tr>
+                <tr>
+                    <td class="text-muted">Pembeli</td>
+                    <td>{{ laptop.buyer_name|default:"-" }}</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <!-- Assessment Info -->
+    <div class="col-md-6">
+        <div class="form-section h-100">
+            <h5><i class="bi bi-clipboard-check"></i> Hasil Penilaian WSM</h5>
+            {% if assessment %}
+            <table class="table table-borderless">
+                <tr>
+                    <td class="text-muted" style="width: 40%;">Skor WSM</td>
+                    <td class="fw-bold fs-5">{{ assessment.wsm_score }}</td>
+                </tr>
+                <tr>
+                    <td class="text-muted">Grade Akhir</td>
+                    <td>
+                        <span class="badge-grade badge-grade-{{ assessment.final_grade|lower }}">Grade {{
+                            assessment.final_grade }}</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="text-muted">Catatan Kondisi</td>
+                    <td>{{ assessment.condition_notes|default:"-" }}</td>
+                </tr>
+                <tr>
+                    <td class="text-muted">Dinilai Pada</td>
+                    <td>{{ assessment.assessed_at|date:"d M Y H:i" }}</td>
+                </tr>
+            </table>
+            {% if recommendation %}
+            <div class="alert alert-info mt-3">
+                <strong>{{ recommendation.status }}</strong><br>
+                <small>{{ recommendation.action }}</small>
+            </div>
+            {% endif %}
+            {% else %}
+            <div class="text-center py-4">
+                <i class="bi bi-clipboard-x fs-1 text-muted"></i>
+                <p class="text-muted mt-2">Aset ini belum dinilai</p>
+                <a href="{% url 'inventory:assessment_input' %}" class="btn btn-primary btn-sm">
+                    <i class="bi bi-clipboard-check"></i> Input Penilaian
+                </a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

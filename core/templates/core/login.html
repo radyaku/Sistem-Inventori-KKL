@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+
+{% block title %}Login{% endblock %}
+
+{% block anonymous_content %}
+<div class="login-page">
+    <div class="login-card">
+        <div class="logo">
+            <h3><i class="bi bi-broadcast-pin"></i> PROTELINDO</h3>
+            <small>A Subsidiary of PT Sarana Menara Nusantara Tbk</small>
+        </div>
+
+        <h4>Sistem Inventori Laptop Lelang</h4>
+        <p class="subtitle">Masuk untuk melanjutkan</p>
+
+        {% if messages %}
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+        {% endfor %}
+        {% endif %}
+
+        <form method="post">
+            {% csrf_token %}
+
+            <div class="mb-3">
+                <label for="username" class="form-label">Username</label>
+                <input type="text" class="form-control" id="username" name="username" placeholder="Masukkan username"
+                    required>
+            </div>
+
+            <div class="mb-3">
+                <label for="password" class="form-label">Password</label>
+                <input type="password" class="form-control" id="password" name="password"
+                    placeholder="Masukkan password" required>
+            </div>
+
+            <div class="mb-4 text-end">
+                <a href="#" class="text-decoration-none" style="color: var(--primary-color);">Lupa password?</a>
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-login">Masuk</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

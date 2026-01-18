@@ -1,0 +1,89 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h2>{{ title }}</h2>
+    <p>{% if laptop %}Edit data aset {{ laptop.asset_code }}{% else %}Tambah data aset baru ke sistem{% endif %}</p>
+</div>
+
+<form method="post">
+    {% csrf_token %}
+
+    <div class="form-section">
+        <h5><i class="bi bi-tag"></i> Identifikasi Aset</h5>
+        <div class="row g-3">
+            <div class="col-md-4">
+                <label for="id_asset_code" class="form-label">Kode Aset <span class="text-danger">*</span></label>
+                {{ form.asset_code }}
+                {% if form.asset_code.errors %}
+                <div class="invalid-feedback d-block">{{ form.asset_code.errors.0 }}</div>
+                {% endif %}
+            </div>
+            <div class="col-md-4">
+                <label for="id_serial_number" class="form-label">Nomor Serial <span class="text-danger">*</span></label>
+                {{ form.serial_number }}
+                {% if form.serial_number.errors %}
+                <div class="invalid-feedback d-block">{{ form.serial_number.errors.0 }}</div>
+                {% endif %}
+            </div>
+            <div class="col-md-4">
+                <label for="id_last_user" class="form-label">User Terakhir <span class="text-danger">*</span></label>
+                {{ form.last_user }}
+                {% if form.last_user.errors %}
+                <div class="invalid-feedback d-block">{{ form.last_user.errors.0 }}</div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <div class="form-section">
+        <h5><i class="bi bi-cpu"></i> Spesifikasi Teknis</h5>
+        <div class="row g-3">
+            <div class="col-md-4">
+                <label for="id_brand" class="form-label">Merk <span class="text-danger">*</span></label>
+                {{ form.brand }}
+            </div>
+            <div class="col-md-8">
+                <label for="id_model" class="form-label">Model <span class="text-danger">*</span></label>
+                {{ form.model }}
+            </div>
+            <div class="col-md-6">
+                <label for="id_processor" class="form-label">Prosesor <span class="text-danger">*</span></label>
+                {{ form.processor }}
+            </div>
+            <div class="col-md-3">
+                <label for="id_ram_gb" class="form-label">RAM (GB) <span class="text-danger">*</span></label>
+                {{ form.ram_gb }}
+            </div>
+            <div class="col-md-3">
+                <label for="id_storage_type" class="form-label">Tipe Storage</label>
+                {{ form.storage_type }}
+            </div>
+            <div class="col-md-3">
+                <label for="id_storage_size_gb" class="form-label">Ukuran Storage (GB) <span
+                        class="text-danger">*</span></label>
+                {{ form.storage_size_gb }}
+            </div>
+            <div class="col-md-6">
+                <label for="id_gpu" class="form-label">GPU (Opsional)</label>
+                {{ form.gpu }}
+            </div>
+            <div class="col-md-3">
+                <label for="id_open_price" class="form-label">Harga Pembukaan</label>
+                {{ form.open_price }}
+            </div>
+        </div>
+    </div>
+
+    <div class="d-flex gap-2">
+        <button type="submit" class="btn btn-primary">
+            <i class="bi bi-check-lg"></i> Simpan
+        </button>
+        <a href="{% url 'inventory:laptop_list' %}" class="btn btn-outline-secondary">
+            <i class="bi bi-x-lg"></i> Batal
+        </a>
+    </div>
+</form>
+{% endblock %}

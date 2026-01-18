@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+
+{% block title %}Setting{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h2>Setting</h2>
+    <p>Konfigurasi sistem</p>
+</div>
+
+<div class="row g-4">
+    <div class="col-md-4">
+        <a href="{% url 'inventory:criteria_list' %}" class="text-decoration-none">
+            <div class="stat-card h-100">
+                <div class="d-flex align-items-center">
+                    <div class="fs-1 text-primary me-3">
+                        <i class="bi bi-sliders"></i>
+                    </div>
+                    <div>
+                        <h5 class="mb-1">Kriteria WSM</h5>
+                        <p class="text-muted mb-0 small">Kelola bobot kriteria penilaian</p>
+                    </div>
+                </div>
+            </div>
+        </a>
+    </div>
+
+    <div class="col-md-4">
+        <a href="{% url 'admin:index' %}" class="text-decoration-none">
+            <div class="stat-card h-100">
+                <div class="d-flex align-items-center">
+                    <div class="fs-1 text-warning me-3">
+                        <i class="bi bi-gear"></i>
+                    </div>
+                    <div>
+                        <h5 class="mb-1">Admin Panel</h5>
+                        <p class="text-muted mb-0 small">Akses Django Admin</p>
+                    </div>
+                </div>
+            </div>
+        </a>
+    </div>
+
+    <div class="col-md-4">
+        <a href="{% url 'reports:report_list' %}" class="text-decoration-none">
+            <div class="stat-card h-100">
+                <div class="d-flex align-items-center">
+                    <div class="fs-1 text-success me-3">
+                        <i class="bi bi-file-earmark-text"></i>
+                    </div>
+                    <div>
+                        <h5 class="mb-1">Laporan</h5>
+                        <p class="text-muted mb-0 small">Generate laporan PDF/Excel</p>
+                    </div>
+                </div>
+            </div>
+        </a>
+    </div>
+</div>
+{% endblock %}
