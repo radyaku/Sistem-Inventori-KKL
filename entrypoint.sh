@@ -3,6 +3,9 @@
 echo "Running migrations..."
 python manage.py migrate
 
+echo "Creating admin if not exists..."
+python create_admin.py
+
 echo "Collecting static files..."
 python manage.py collectstatic --noinput
 
