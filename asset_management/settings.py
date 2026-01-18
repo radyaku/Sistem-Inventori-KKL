@@ -18,6 +18,11 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['*']  # Mengizinkan akses dari semua host/IP
 
+CSRF_TRUSTED_ORIGINS = [
+    "https://*.up.railway.app",
+]
+
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 # Application definition
 INSTALLED_APPS = [
