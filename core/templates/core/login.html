@@ -3,46 +3,81 @@
 {% block title %}Login{% endblock %}
 
 {% block anonymous_content %}
-<div class="login-page">
-    <div class="login-card">
-        <div class="logo">
-            <h3><i class="bi bi-broadcast-pin"></i> PROTELINDO</h3>
-            <small>A Subsidiary of PT Sarana Menara Nusantara Tbk</small>
+<div class="login-page-split">
+    <!-- Left Side - Branding -->
+    <div class="login-branding">
+        <div class="branding-content">
+            <div class="branding-logo">
+                <i class="bi bi-broadcast-pin"></i>
+            </div>
+            <h2>Selamat Datang di</h2>
+            <h1>PROTELINDO</h1>
+            <p class="branding-subtitle">A Subsidiary of PT Sarana Menara Nusantara Tbk</p>
+            <div class="branding-description">
+                <p>Sistem Inventori Laptop Lelang membantu Anda mengelola, menilai, dan melacak aset IT perusahaan
+                    dengan mudah dan efisien.</p>
+            </div>
+            <div class="branding-decoration">
+                <div class="decoration-circle circle-1"></div>
+                <div class="decoration-circle circle-2"></div>
+                <div class="decoration-circle circle-3"></div>
+            </div>
         </div>
+    </div>
 
-        <h4>Sistem Inventori Laptop Lelang</h4>
-        <p class="subtitle">Masuk untuk melanjutkan</p>
+    <!-- Right Side - Login Form -->
+    <div class="login-form-side">
+        <div class="login-form-container">
+            <h3>Masuk</h3>
+            <p class="login-subtitle">Masukkan kredensial Anda untuk melanjutkan</p>
 
-        {% if messages %}
-        {% for message in messages %}
-        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
-            {{ message }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            {% if messages %}
+            {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+            {% endfor %}
+            {% endif %}
+
+            <form method="post" class="login-form">
+                {% csrf_token %}
+
+                <div class="form-group">
+                    <label for="username" class="form-label">Username</label>
+                    <div class="input-icon-wrapper">
+                        <i class="bi bi-person"></i>
+                        <input type="text" class="form-control" id="username" name="username"
+                            placeholder="Masukkan username" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="password" class="form-label">Password</label>
+                    <div class="input-icon-wrapper">
+                        <i class="bi bi-lock"></i>
+                        <input type="password" class="form-control" id="password" name="password"
+                            placeholder="Masukkan password" required>
+                    </div>
+                </div>
+
+                <div class="form-options">
+                    <label class="remember-me">
+                        <input type="checkbox" name="remember">
+                        <span>Ingat saya</span>
+                    </label>
+                </div>
+
+                <button type="submit" class="btn btn-login-split">
+                    <span>Masuk</span>
+                    <i class="bi bi-arrow-right"></i>
+                </button>
+            </form>
+
+            <div class="login-footer">
+                <p>&copy; 2025 PROTELINDO. All rights reserved.</p>
+            </div>
         </div>
-        {% endfor %}
-        {% endif %}
-
-        <form method="post">
-            {% csrf_token %}
-
-            <div class="mb-3">
-                <label for="username" class="form-label">Username</label>
-                <input type="text" class="form-control" id="username" name="username" placeholder="Masukkan username"
-                    required>
-            </div>
-
-            <div class="mb-3">
-                <label for="password" class="form-label">Password</label>
-                <input type="password" class="form-control" id="password" name="password"
-                    placeholder="Masukkan password" required>
-            </div>
-
-            <div class="mb-4 text-end">
-                <a href="#" class="text-decoration-none" style="color: var(--primary-color);">Lupa password?</a>
-            </div>
-
-            <button type="submit" class="btn btn-primary btn-login">Masuk</button>
-        </form>
     </div>
 </div>
 {% endblock %}

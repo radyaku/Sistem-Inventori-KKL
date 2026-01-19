@@ -5,165 +5,214 @@
 {% block content %}
 <div class="page-header">
     <h2>Input Penilaian WSM Untuk Aset</h2>
-    <p>Isi form penilaian kondisi aset</p>
+    <p>Isi form penilaian kondisi aset menggunakan metode Weighted Sum Model</p>
 </div>
 
 <form method="post">
     {% csrf_token %}
 
-    <!-- Kode Aset -->
-    <div class="form-section">
-        <div class="row">
-            <div class="col-md-4">
-                <label for="laptop_code" class="form-label">Kode Aset</label>
-                <input type="text" name="laptop_code" id="laptop_code" class="form-control"
-                    placeholder="Masukkan kode aset" list="laptop-list" required>
-                <datalist id="laptop-list">
-                    {% for laptop in laptops %}
-                    <option value="{{ laptop.asset_code }}">{{ laptop.brand }} {{ laptop.model }}</option>
-                    {% endfor %}
-                </datalist>
+    <!-- Asset Selection Card -->
+    <div class="assessment-card asset-selection-card">
+        <div class="assessment-card-header">
+            <div class="assessment-card-icon">
+                <i class="bi bi-laptop"></i>
+            </div>
+            <div>
+                <h5>Pilih Aset</h5>
+                <small>Masukkan atau pilih kode aset yang akan dinilai</small>
             </div>
         </div>
-
-        <div class="mt-3">
-            <strong>Spesifikasi C5 (Kriteria Penilaian)</strong>
-        </div>
-
-        <div class="row mt-3">
-            <div class="col-md-4">
-                <label for="id_specs_score" class="form-label">Spesifikasi Teknis</label>
-                {{ form.specs_score }}
-            </div>
-        </div>
-
-        <div class="row mt-3 align-items-center">
-            <div class="col-md-4">
-                <label class="form-label mb-0">Kondisi Daya</label>
-            </div>
-            <div class="col-md-8">
-                <div class="form-check form-switch">
-                    {{ form.power_status }}
-                    <label class="form-check-label" for="id_power_status">Hidup</label>
+        <div class="assessment-card-body">
+            <div class="row align-items-end">
+                <div class="col-md-6">
+                    <label for="laptop_code" class="form-label">Kode Aset</label>
+                    <div class="input-icon-wrapper">
+                        <i class="bi bi-search"></i>
+                        <input type="text" name="laptop_code" id="laptop_code" class="form-control form-control-lg"
+                            placeholder="Ketik atau pilih kode aset..." list="laptop-list" required>
+                    </div>
+                    <datalist id="laptop-list">
+                        {% for laptop in laptops %}
+                        <option value="{{ laptop.asset_code }}">{{ laptop.brand }} {{ laptop.model }}</option>
+                        {% endfor %}
+                    </datalist>
+                </div>
+                <div class="col-md-6">
+                    <div class="specs-preview" id="specs-preview">
+                        <div class="specs-preview-empty">
+                            <i class="bi bi-info-circle"></i>
+                            <span>Pilih aset untuk melihat spesifikasi</span>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Pemeriksaan Fisik & Fungsional -->
-    <div class="form-section">
-        <h5>Pemeriksaan Fisik & Fungsional</h5>
+    <!-- Criteria Grid -->
+    <div class="criteria-section">
+        <h4 class="section-title">
+            <i class="bi bi-clipboard-data"></i>
+            Kriteria Penilaian
+        </h4>
 
         <div class="row g-4">
             <!-- C1 - Kondisi Layar -->
-            <div class="col-md-6">
-                <label class="form-label fw-semibold text-primary">C1 - Kondisi Layar</label>
-                {{ form.screen_condition }}
+            <div class="col-md-6 col-lg-4">
+                <div class="criteria-card">
+                    <div class="criteria-header">
+                        <span class="criteria-badge">C1</span>
+                        <h6>Kondisi Layar</h6>
+                    </div>
+                    <div class="criteria-body">
+                        <label class="form-label">Pilih kondisi layar</label>
+                        {{ form.screen_condition }}
+                    </div>
+                </div>
+            </div>
+
+            <!-- C2 - Kondisi Fisik -->
+            <div class="col-md-6 col-lg-4">
+                <div class="criteria-card">
+                    <div class="criteria-header">
+                        <span class="criteria-badge">C2</span>
+                        <h6>Kondisi Fisik</h6>
+                    </div>
+                    <div class="criteria-body">
+                        <label class="form-label">Pilih kondisi fisik</label>
+                        {{ form.physical_condition }}
+                        <div class="damage-checklist mt-3">
+                            <small class="text-muted d-block mb-2">Kerusakan Fisik:</small>
+                            <div class="damage-check">
+                                {{ form.hinge_broken }}
+                                <label for="id_hinge_broken"><i class="bi bi-tools"></i> Engsel Rusak</label>
+                            </div>
+                            <div class="damage-check">
+                                {{ form.screw_missing }}
+                                <label for="id_screw_missing"><i class="bi bi-gear"></i> Baut Hilang</label>
+                            </div>
+                            <div class="damage-check">
+                                {{ form.dent_crack }}
+                                <label for="id_dent_crack"><i class="bi bi-exclamation-triangle"></i>
+                                    Penyok/Retak</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <!-- C3 - Kesehatan Baterai -->
-            <div class="col-md-6">
-                <label class="form-label fw-semibold text-primary">C3 - Kesehatan Baterai</label>
-                <div class="mt-2">
-                    {% for radio in form.battery_health %}
-                    <div class="form-check">
-                        {{ radio.tag }}
-                        <label class="form-check-label" for="{{ radio.id_for_label }}">
-                            {{ radio.choice_label }}
-                        </label>
+            <div class="col-md-6 col-lg-4">
+                <div class="criteria-card">
+                    <div class="criteria-header">
+                        <span class="criteria-badge">C3</span>
+                        <h6>Kesehatan Baterai</h6>
                     </div>
-                    {% endfor %}
-                </div>
-            </div>
-
-            <!-- C2 - Kerusakan Fisik -->
-            <div class="col-md-6">
-                <label class="form-label fw-semibold text-primary">C2 - Kondisi Fisik</label>
-                {{ form.physical_condition }}
-
-                <div class="mt-3">
-                    <small class="text-muted d-block mb-2">Kerusakan Fisik (centang jika ada):</small>
-                    <div class="form-check">
-                        {{ form.hinge_broken }}
-                        <label class="form-check-label" for="id_hinge_broken">Engsel Rusak</label>
-                    </div>
-                    <div class="form-check">
-                        {{ form.screw_missing }}
-                        <label class="form-check-label" for="id_screw_missing">Baut Hilang</label>
-                    </div>
-                    <div class="form-check">
-                        {{ form.dent_crack }}
-                        <label class="form-check-label" for="id_dent_crack">Penyok/Retak</label>
-                    </div>
-                </div>
-            </div>
-
-            <!-- C6 - Pemeriksaan Fungsional -->
-            <div class="col-md-6">
-                <label class="form-label fw-semibold text-primary">C6 - Konektivitas</label>
-                {{ form.connectivity_score }}
-
-                <div class="mt-3">
-                    <small class="text-muted d-block mb-2">Pemeriksaan Fungsional:</small>
-                    <div class="form-check">
-                        {{ form.camera_ok }}
-                        <label class="form-check-label" for="id_camera_ok">Kamera OK</label>
-                    </div>
-                    <div class="form-check">
-                        {{ form.speaker_ok }}
-                        <label class="form-check-label" for="id_speaker_ok">Speaker OK</label>
-                    </div>
-                    <div class="form-check">
-                        {{ form.usb_port_ok }}
-                        <label class="form-check-label" for="id_usb_port_ok">Port USB OK</label>
+                    <div class="criteria-body">
+                        <label class="form-label">Pilih kondisi baterai</label>
+                        {{ form.battery_health }}
                     </div>
                 </div>
             </div>
 
             <!-- C4 - Perangkat Input -->
-            <div class="col-md-6">
-                <label class="form-label fw-semibold text-primary">C4 - Perangkat Input</label>
-                <div class="row">
-                    <div class="col-6">
-                        <label class="form-label small">Keyboard</label>
-                        <div>
-                            {% for radio in form.keyboard_status %}
-                            <div class="form-check">
-                                {{ radio.tag }}
-                                <label class="form-check-label small" for="{{ radio.id_for_label }}">
-                                    {{ radio.choice_label|truncatechars:30 }}
-                                </label>
-                            </div>
-                            {% endfor %}
-                        </div>
+            <div class="col-md-6 col-lg-4">
+                <div class="criteria-card">
+                    <div class="criteria-header">
+                        <span class="criteria-badge">C4</span>
+                        <h6>Perangkat Input</h6>
                     </div>
-                    <div class="col-6">
-                        <label class="form-label small">Touchpad</label>
-                        <div>
-                            {% for radio in form.touchpad_status %}
-                            <div class="form-check">
-                                {{ radio.tag }}
-                                <label class="form-check-label small" for="{{ radio.id_for_label }}">
-                                    {{ radio.choice_label|truncatechars:30 }}
-                                </label>
+                    <div class="criteria-body">
+                        <div class="row g-3">
+                            <div class="col-6">
+                                <label class="form-label"><i class="bi bi-keyboard"></i> Keyboard</label>
+                                {{ form.keyboard_status }}
                             </div>
-                            {% endfor %}
+                            <div class="col-6">
+                                <label class="form-label"><i class="bi bi-hand-index"></i> Touchpad</label>
+                                {{ form.touchpad_status }}
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Catatan -->
-            <div class="col-md-6">
-                <label for="id_condition_notes" class="form-label fw-semibold">Catatan Kondisi</label>
-                {{ form.condition_notes }}
+            <!-- C5 - Spesifikasi -->
+            <div class="col-md-6 col-lg-4">
+                <div class="criteria-card">
+                    <div class="criteria-header">
+                        <span class="criteria-badge">C5</span>
+                        <h6>Spesifikasi Teknis</h6>
+                    </div>
+                    <div class="criteria-body">
+                        <label class="form-label">Pilih skor spesifikasi</label>
+                        {{ form.specs_score }}
+                        <div class="power-status-toggle mt-3">
+                            <label class="form-label small fw-semibold">Kondisi Daya</label>
+                            <div class="power-toggle">
+                                {{ form.power_status }}
+                                <label for="id_power_status">
+                                    <span class="power-on"><i class="bi bi-power"></i> Hidup</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- C6 - Konektivitas -->
+            <div class="col-md-6 col-lg-4">
+                <div class="criteria-card">
+                    <div class="criteria-header">
+                        <span class="criteria-badge">C6</span>
+                        <h6>Konektivitas</h6>
+                    </div>
+                    <div class="criteria-body">
+                        <label class="form-label">Pilih skor konektivitas</label>
+                        {{ form.connectivity_score }}
+                        <div class="functional-checks mt-3">
+                            <small class="text-muted d-block mb-2">Pemeriksaan Fungsional:</small>
+                            <div class="functional-check">
+                                {{ form.camera_ok }}
+                                <label for="id_camera_ok"><i class="bi bi-camera-video"></i> Kamera OK</label>
+                            </div>
+                            <div class="functional-check">
+                                {{ form.speaker_ok }}
+                                <label for="id_speaker_ok"><i class="bi bi-volume-up"></i> Speaker OK</label>
+                            </div>
+                            <div class="functional-check">
+                                {{ form.usb_port_ok }}
+                                <label for="id_usb_port_ok"><i class="bi bi-usb-symbol"></i> Port USB OK</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 
-    <div class="d-flex justify-content-end">
-        <button type="submit" class="btn btn-primary btn-lg">
-            <i class="bi bi-calculator"></i> Simpan & Hitung Grade
+    <!-- Notes Section -->
+    <div class="assessment-card notes-card">
+        <div class="assessment-card-header">
+            <div class="assessment-card-icon notes-icon">
+                <i class="bi bi-chat-left-text"></i>
+            </div>
+            <div>
+                <h5>Catatan Kondisi</h5>
+                <small>Tambahkan catatan tambahan jika diperlukan</small>
+            </div>
+        </div>
+        <div class="assessment-card-body">
+            {{ form.condition_notes }}
+        </div>
+    </div>
+
+    <!-- Submit Button -->
+    <div class="submit-section">
+        <button type="submit" class="btn btn-submit-assessment">
+            <i class="bi bi-calculator"></i>
+            <span>Simpan & Hitung Grade</span>
+            <i class="bi bi-arrow-right"></i>
         </button>
     </div>
 </form>

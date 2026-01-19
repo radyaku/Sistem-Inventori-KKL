@@ -85,9 +85,9 @@ class AssessmentForm(forms.ModelForm):
         widgets = {
             'screen_condition': forms.Select(attrs={'class': 'form-select'}),
             'physical_condition': forms.Select(attrs={'class': 'form-select'}),
-            'battery_health': forms.RadioSelect(),
-            'keyboard_status': forms.RadioSelect(),
-            'touchpad_status': forms.RadioSelect(),
+            'battery_health': forms.Select(attrs={'class': 'form-select'}),
+            'keyboard_status': forms.Select(attrs={'class': 'form-select'}),
+            'touchpad_status': forms.Select(attrs={'class': 'form-select'}),
             'specs_score': forms.Select(attrs={'class': 'form-select'}),
             'power_status': forms.CheckboxInput(attrs={'class': 'form-check-input', 'role': 'switch'}),
             'connectivity_score': forms.Select(attrs={'class': 'form-select'}),
